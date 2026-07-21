@@ -38,3 +38,9 @@ streamlit run app.py
 ## 🚨 주요 이상거래 탐지 규칙
 * **규칙 1 (타국 결제 발견)**: 슬라이딩 윈도우 설정 시간(예: 10분) 내에 동일한 Partition Key를 가진 사용자가 2개국 이상의 국가(예: KR 결제 후 곧바로 US 결제)에서 거래 시 즉시 차단 API 호출 피드를 발행합니다.
 * **규칙 2 (단시간 과다 결제)**: 슬라이딩 윈도우 내에 한 유저가 임계 설정값 이상의 결제를 시도할 경우 비정상 매크로 혹은 탈취 패턴으로 간주하고 경고를 트리거합니다.
+
+## Drools 핵심 기능의 Python 모사 (Simulation)
+Python 코드로 Drools의 역할을 구현하여 대신하도록 만들었습니다.
+* Drools KieSession (STREAM 모드) ➡️ util/cep_engine.py 파일 내 DroolsCEPEngine 클래스의 self.session_memory (인메모리 딕셔너리) 구조로 대체
+* 의사 시계 (PseudoClock) ➡️ 시스템 시계 대신 메시지의 eventTime을 받아 수동으로 시계를 전진시키는 advance_pseudo_clock 함수로 대체
+* 슬라이딩 윈도우 규칙 (DRL 규칙) ➡️ Drools 규칙 문법(DRL 파일) 대신 Python의 조건문(if/elif)과 리스트 컴프리헨션을 이용해 10분(600초) 범위 외부 데이터를 만료시키는 로직으로 대체
